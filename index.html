@@ -11,6 +11,12 @@
         table { margin: 10px auto; border-collapse: collapse; }
         th, td { border: 1px solid black; padding: 5px; }
         .tab-buttons { margin-bottom: 20px; }
+        .player-names {
+            display: flex;
+            flex-direction: column;  /* Stack the player inputs vertically */
+            gap: 10px;  /* Add space between the labels */
+            align-items: center;  /* Align to the left */
+        }
     </style>
 </head>
 <body>
@@ -46,7 +52,7 @@
     <!-- Scoresheet Tab -->
     <div id="scoresheet" class="tab">
         <h2>Scoresheet</h2>
-        <div>
+        <div class="player-names">
             <label>Person 1: <input type="text" id="player1" oninput="updatePlayerNames()"></label>
             <label>Person 2: <input type="text" id="player2" oninput="updatePlayerNames()"></label>
             <label>Person 3: <input type="text" id="player3" oninput="updatePlayerNames()"></label>
@@ -261,6 +267,8 @@
                 resultsTable.innerHTML += row;
             });
         }
+
+        
     </script>
 </body>
 </html>
