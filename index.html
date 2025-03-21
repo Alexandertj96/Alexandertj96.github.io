@@ -136,10 +136,10 @@
 
         function updatePlayerNames() {
             let names = [
-                document.getElementById('player1').value || 'Player 1',
-                document.getElementById('player2').value || 'Player 2',
-                document.getElementById('player3').value || 'Player 3',
-                document.getElementById('player4').value || 'Player 4'
+                document.getElementById('player1').value || 'Person 1',
+                document.getElementById('player2').value || 'Person 2',
+                document.getElementById('player3').value || 'Person 3',
+                document.getElementById('player4').value || 'Person 4'
             ];
             document.querySelectorAll('.playerName').forEach((td, index) => {
                 td.textContent = names[index % 4];
