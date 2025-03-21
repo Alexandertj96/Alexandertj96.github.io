@@ -46,7 +46,15 @@
     <!-- Scoresheet Tab -->
     <div id="scoresheet" class="tab">
         <h2>Scoresheet</h2>
+        <div>
+            <label>Player 1: <input type="text" id="player1" oninput="updatePlayerNames()"></label>
+            <label>Player 2: <input type="text" id="player2" oninput="updatePlayerNames()"></label>
+            <label>Player 3: <input type="text" id="player3" oninput="updatePlayerNames()"></label>
+            <label>Player 4: <input type="text" id="player4" oninput="updatePlayerNames()"></label>
+        </div>
         <div id="scoresheetTables"></div>
+        <h3>Items not yet scored</h3>
+        <ul id="missingScores"></ul>
     </div>
 
     <div id="results" class="tab">
@@ -105,14 +113,13 @@
             
             meatItems.forEach(item => {
                 let table = document.createElement('table');
-                let headerRow = `<tr><th colspan='6'>${item}</th></tr>
-                                 <tr><th></th><th>Name</th><th>Taste (1-10)</th><th>Looks (1-10)</th><th>Dry/Juicy (1-10)</th><th>Average</th></tr>`;
-                table.innerHTML = headerRow;
+                let headerRow = `<tr><th colspan="5">${item}</th></tr>`;
+                let subHeader = `<tr><th>Player</th><th>Taste</th><th>Looks</th><th>Juiciness</th><th>Average</th></tr>`;
+                table.innerHTML = headerRow + subHeader;
                 
                 for (let i = 1; i <= 4; i++) {
                     let row = document.createElement('tr');
-                    row.innerHTML = `<td>Person ${i}</td>
-                                     <td><input type='text' oninput='saveData()'></td>
+                    row.innerHTML = `<td class='playerName'>Player ${i}</td>
                                      <td><input type='number' min='1' max='10' class='score' oninput='saveData()'></td>
                                      <td><input type='number' min='1' max='10' class='score' oninput='saveData()'></td>
                                      <td><input type='number' min='1' max='10' class='score' oninput='saveData()'></td>
@@ -123,7 +130,20 @@
                 container.appendChild(table);
             });
             attachEventListeners();
+            updatePlayerNames();
             loadData();
+        }
+
+        function updatePlayerNames() {
+            let names = [
+                document.getElementById('player1').value || 'Player 1',
+                document.getElementById('player2').value || 'Player 2',
+                document.getElementById('player3').value || 'Player 3',
+                document.getElementById('player4').value || 'Player 4'
+            ];
+            document.querySelectorAll('.playerName').forEach((td, index) => {
+                td.textContent = names[index % 4];
+            });
         }
 
         function attachEventListeners() {
@@ -151,36 +171,60 @@
         }
 
         function saveData() {
-            let data = [];
-            document.querySelectorAll('#scoresheetTables table').forEach((table, index) => {
+            let data = {
+                playerNames: [
+                    document.getElementById('player1').value,
+                    document.getElementById('player2').value,
+                    document.getElementById('player3').value,
+                    document.getElementById('player4').value
+                ],
+                scores: []
+            };
+
+            document.querySelectorAll('#scoresheetTables table').forEach((table) => {
                 let itemData = [];
-                table.querySelectorAll('tr').forEach(row => {
+                table.querySelectorAll('tr').forEach((row) => {
                     let rowData = [];
                     row.querySelectorAll('input').forEach(input => {
                         rowData.push(input.value);
                     });
                     itemData.push(rowData);
                 });
-                data.push(itemData);
+                data.scores.push(itemData);
             });
+
             localStorage.setItem('scoresheetData', JSON.stringify(data));
         }
+
 
         function loadData() {
             let data = JSON.parse(localStorage.getItem('scoresheetData'));
             if (data) {
-                document.querySelectorAll('#scoresheetTables table').forEach((table, index) => {
-                    table.querySelectorAll('tr').forEach((row, rowIndex) => {
-                        row.querySelectorAll('input').forEach((input, inputIndex) => {
-                            if (data[index] && data[index][rowIndex] && data[index][rowIndex][inputIndex] !== undefined) {
-                                input.value = data[index][rowIndex][inputIndex];
-                            }
+                // Load player names
+                if (data.playerNames) {
+                    document.getElementById('player1').value = data.playerNames[0] || '';
+                    document.getElementById('player2').value = data.playerNames[1] || '';
+                    document.getElementById('player3').value = data.playerNames[2] || '';
+                    document.getElementById('player4').value = data.playerNames[3] || '';
+                    updatePlayerNames(); // Update displayed names
+                }
+
+                // Load scores
+                if (data.scores) {
+                    document.querySelectorAll('#scoresheetTables table').forEach((table, index) => {
+                        table.querySelectorAll('tr').forEach((row, rowIndex) => {
+                            row.querySelectorAll('input').forEach((input, inputIndex) => {
+                                if (data.scores[index] && data.scores[index][rowIndex] && data.scores[index][rowIndex][inputIndex] !== undefined) {
+                                    input.value = data.scores[index][rowIndex][inputIndex];
+                                }
+                            });
                         });
                     });
-                });
-                calculateAverages();
+                    calculateAverages();
+                }
             }
         }
+
         
         generateScoresheet(); 
         
