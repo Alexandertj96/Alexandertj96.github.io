@@ -17,6 +17,7 @@
     <div class="tab-buttons">
         <button onclick="showTab('roulette')">Roulette</button>
         <button onclick="showTab('scoresheet')">Scoresheet</button>
+        <button onclick="showTab('results')">Results</button>
     </div>
     
     <!-- Roulette Tab -->
@@ -46,6 +47,13 @@
     <div id="scoresheet" class="tab">
         <h2>Scoresheet</h2>
         <div id="scoresheetTables"></div>
+    </div>
+
+    <div id="results" class="tab">
+        <h2>Results</h2>
+        <table id="resultsTable">
+            <tr><th>Item</th><th>Average Score</th></tr>
+        </table>
     </div>
     
     <script>
@@ -175,6 +183,37 @@
         }
         
         generateScoresheet(); 
+        
+        function showTab(tabId) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            if (tabId === 'results') updateResults();
+        }
+
+        function updateResults() {
+            let items = [];
+            document.querySelectorAll('#scoresheetTables table').forEach(table => {
+                let itemName = table.querySelector('th').innerText;
+                let avgCells = table.querySelectorAll('.average');
+                let total = 0, count = 0;
+                avgCells.forEach(cell => {
+                    let val = parseFloat(cell.innerText);
+                    if (!isNaN(val)) {
+                        total += val;
+                        count++;
+                    }
+                });
+                let avgScore = count > 0 ? (total / count).toFixed(1) : '0';
+                items.push({ name: itemName, avg: parseFloat(avgScore) });
+            });
+            items.sort((a, b) => b.avg - a.avg);
+            let resultsTable = document.getElementById('resultsTable');
+            resultsTable.innerHTML = '<tr><th>Item</th><th>Average Score</th></tr>';
+            items.forEach(item => {
+                let row = `<tr><td>${item.name}</td><td>${item.avg}</td></tr>`;
+                resultsTable.innerHTML += row;
+            });
+        }
     </script>
 </body>
 </html>
