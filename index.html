@@ -64,10 +64,10 @@
                 for (let i = 1; i <= 4; i++) {
                     let row = document.createElement('tr');
                     row.innerHTML = `<td>Person ${i}</td>
-                                     <td><input type='text'></td>
-                                     <td><input type='number' min='1' max='10' class='score'></td>
-                                     <td><input type='number' min='1' max='10' class='score'></td>
-                                     <td><input type='number' min='1' max='10' class='score'></td>
+                                     <td><input type='text' oninput='saveData()'></td>
+                                     <td><input type='number' min='1' max='10' class='score' oninput='saveData()'></td>
+                                     <td><input type='number' min='1' max='10' class='score' oninput='saveData()'></td>
+                                     <td><input type='number' min='1' max='10' class='score' oninput='saveData()'></td>
                                      <td class='average'>0</td>`;
                     table.appendChild(row);
                 }
@@ -75,6 +75,7 @@
                 container.appendChild(table);
             });
             attachEventListeners();
+            loadData();
         }
 
         function attachEventListeners() {
@@ -99,6 +100,38 @@
                     avgCell.textContent = count > 0 ? (sum / count).toFixed(1) : '0';
                 }
             });
+        }
+
+        function saveData() {
+            let data = [];
+            document.querySelectorAll('#scoresheetTables table').forEach((table, index) => {
+                let itemData = [];
+                table.querySelectorAll('tr').forEach(row => {
+                    let rowData = [];
+                    row.querySelectorAll('input').forEach(input => {
+                        rowData.push(input.value);
+                    });
+                    itemData.push(rowData);
+                });
+                data.push(itemData);
+            });
+            localStorage.setItem('scoresheetData', JSON.stringify(data));
+        }
+
+        function loadData() {
+            let data = JSON.parse(localStorage.getItem('scoresheetData'));
+            if (data) {
+                document.querySelectorAll('#scoresheetTables table').forEach((table, index) => {
+                    table.querySelectorAll('tr').forEach((row, rowIndex) => {
+                        row.querySelectorAll('input').forEach((input, inputIndex) => {
+                            if (data[index] && data[index][rowIndex] && data[index][rowIndex][inputIndex] !== undefined) {
+                                input.value = data[index][rowIndex][inputIndex];
+                            }
+                        });
+                    });
+                });
+                calculateAverages();
+            }
         }
         
         generateScoresheet(); // Ensure scoresheet is always available
