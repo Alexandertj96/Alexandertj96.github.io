@@ -114,7 +114,7 @@
             meatItems.forEach(item => {
                 let table = document.createElement('table');
                 let headerRow = `<tr><th colspan="5">${item}</th></tr>`;
-                let subHeader = `<tr><th>Player</th><th>Taste</th><th>Looks</th><th>Juiciness</th><th>Average</th></tr>`;
+                let subHeader = `<tr><th>Player</th><th>Taste [1:10]</th><th>Looks [1:10]</th><th>Juiciness [1:10]</th><th>Average</th></tr>`;
                 table.innerHTML = headerRow + subHeader;
                 
                 for (let i = 1; i <= 4; i++) {
@@ -239,22 +239,25 @@
             document.querySelectorAll('#scoresheetTables table').forEach(table => {
                 let itemName = table.querySelector('th').innerText;
                 let avgCells = table.querySelectorAll('.average');
-                let total = 0, count = 0;
+                let total = 0, count = 0, amount = 0;
                 avgCells.forEach(cell => {
                     let val = parseFloat(cell.innerText);
                     if (!isNaN(val)) {
                         total += val;
                         count++;
+                        if (val > 0) {
+                            amount++;
+                        }
                     }
                 });
                 let avgScore = count > 0 ? (total / count).toFixed(1) : '0';
-                items.push({ name: itemName, avg: parseFloat(avgScore) });
+                items.push({ name: itemName, avg: parseFloat(avgScore), count: amount });
             });
             items.sort((a, b) => b.avg - a.avg);
             let resultsTable = document.getElementById('resultsTable');
-            resultsTable.innerHTML = '<tr><th>Item</th><th>Average Score</th></tr>';
+            resultsTable.innerHTML = '<tr><th>Item</th><th>Average Score</th><th>Amount of scores</th></tr>';
             items.forEach(item => {
-                let row = `<tr><td>${item.name}</td><td>${item.avg}</td></tr>`;
+                let row = `<tr><td>${item.name}</td><td>${item.avg}</td><td>${item.count}</td></tr>`;
                 resultsTable.innerHTML += row;
             });
         }
