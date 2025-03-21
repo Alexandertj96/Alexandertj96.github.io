@@ -33,8 +33,12 @@
     </div>
     
     <script>
-        const items = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O'];
-        let chosenItem = '';
+        const items = [
+            "Lammeculotte", "Hel bagt blomkål", "Sønderjyde pølse", "Okseroast", "Duroc cubes smoked", "Pulled pork over night",
+            "Halve grillede tomater", "Flammen pebersovs", "Okseblomme", "Kalkun", "Oksespidsbryst", "Chicago pork af dansk gris med krydret rub",
+            "Rødvinsbraiseret vildsvin", "Go'e ben", "Flammens ølbraisering", "Argentinske pølser", "Andebryst med honning og timian", "Kænguru",
+            "Kalvecuvette", "Hot 'n' Roasted okse"
+        ];
 
         function showTab(tabId) {
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
@@ -42,32 +46,34 @@
         }
         
         function generateRoulette() {
-            chosenItem = items[Math.floor(Math.random() * items.length)];
+            let chosenItem = items[Math.floor(Math.random() * items.length)];
             const time = new Date().toLocaleTimeString();
             document.getElementById('rouletteResult').innerHTML = `Result: <b>${chosenItem}</b><br>Successful! at time: ${time}`;
-            generateScoresheet();
         }
 
         function generateScoresheet() {
             let container = document.getElementById('scoresheetTables');
             container.innerHTML = ''; // Clear previous tables
 
-            let table = document.createElement('table');
-            let headerRow = `<tr><th></th><th>Name</th><th>Taste (1-10)</th><th>Looks (1-10)</th><th>Dry/Juicy (1-10)</th><th>Average</th></tr>`;
-            table.innerHTML = headerRow;
-            
-            for (let i = 1; i <= 4; i++) {
-                let row = document.createElement('tr');
-                row.innerHTML = `<td>Item ${i}</td>
-                                 <td><input type='text'></td>
-                                 <td><input type='number' min='1' max='10' class='score'></td>
-                                 <td><input type='number' min='1' max='10' class='score'></td>
-                                 <td><input type='number' min='1' max='10' class='score'></td>
-                                 <td class='average'>0</td>`;
-                table.appendChild(row);
-            }
-            
-            container.appendChild(table);
+            items.forEach(item => {
+                let table = document.createElement('table');
+                let headerRow = `<tr><th colspan='5'>${item}</th></tr>
+                                 <tr><th></th><th>Name</th><th>Taste (1-10)</th><th>Looks (1-10)</th><th>Dry/Juicy (1-10)</th><th>Average</th></tr>`;
+                table.innerHTML = headerRow;
+                
+                for (let i = 1; i <= 4; i++) {
+                    let row = document.createElement('tr');
+                    row.innerHTML = `<td>Person ${i}</td>
+                                     <td><input type='text'></td>
+                                     <td><input type='number' min='1' max='10' class='score'></td>
+                                     <td><input type='number' min='1' max='10' class='score'></td>
+                                     <td><input type='number' min='1' max='10' class='score'></td>
+                                     <td class='average'>0</td>`;
+                    table.appendChild(row);
+                }
+                
+                container.appendChild(table);
+            });
             attachEventListeners();
         }
 
@@ -94,6 +100,8 @@
                 }
             });
         }
+        
+        generateScoresheet(); // Ensure scoresheet is always available
     </script>
 </body>
 </html>
