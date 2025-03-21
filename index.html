@@ -21,9 +21,25 @@
     
     <!-- Roulette Tab -->
     <div id="roulette" class="tab active">
-        <h2>Roulette</h2>
-        <button onclick="generateRoulette()">Spin</button>
-        <p id="rouletteResult"></p>
+        <h2>Roulette - Meat</h2>
+        <button onclick="generateRoulette(meatItems, 'rouletteResult1')">Spin</button>
+        <p id="rouletteResult1"></p>
+        
+        <h2>Roulette - Warm dishes</h2>
+        <button onclick="generateRoulette(warmDishes, 'rouletteResult2')">Spin</button>
+        <p id="rouletteResult2"></p>
+        
+        <h2>Roulette - Salat</h2>
+        <button onclick="generateRoulette(salatItems, 'rouletteResult3')">Spin</button>
+        <p id="rouletteResult3"></p>
+        
+        <h2>Roulette - Starters</h2>
+        <button onclick="generateRoulette(starters, 'rouletteResult4')">Spin</button>
+        <p id="rouletteResult4"></p>
+
+        <h2>Roulette - Sauce</h2>
+        <button onclick="generateRoulette(sauce, 'rouletteResult5')">Spin</button>
+        <p id="rouletteResult5"></p>
     </div>
     
     <!-- Scoresheet Tab -->
@@ -33,31 +49,55 @@
     </div>
     
     <script>
-        const items = [
+        const meatItems = [
             "Lammeculotte", "Hel bagt blomkål", "Sønderjyde pølse", "Okseroast", "Duroc cubes smoked", "Pulled pork over night",
-            "Halve grillede tomater", "Flammen pebersovs", "Okseblomme", "Kalkun", "Oksespidsbryst", "Chicago pork af dansk gris med krydret rub",
+            "Halve grillede tomater", "Okseblomme", "Kalkun", "Oksespidsbryst", "Chicago pork af dansk gris med krydret rub",
             "Rødvinsbraiseret vildsvin", "Go'e ben", "Flammens ølbraisering", "Argentinske pølser", "Andebryst med honning og timian", "Kænguru",
             "Kalvecuvette", "Hot 'n' Roasted okse"
         ];
+        
+        const warmDishes = [
+            "Mac’n cheese", "Gratineret grøntsagslasagne", "Majskolber", "Grillet sommerkål", "Søde kartoffelfritter", "Velfærds kyllingeoverlår",
+            "Stegte svampe", "Små ovnbagte kartofler", "Flammens flødekartofler", "Pommes Frites", "Kyllingenuggets"
+        ];
+        
+        const salatItems = [
+            "Æbler i skiver", "Frisk Mozarella", "Salat Mayonaise", "Blåbær", "Soltørrede tomater", "Græskarkerner", "Babyspinat",
+            "Marinerede champignon", "Appelsin", "Avocado i tern", "Hj. Tapenade", "Gul semidried tomat", "Valnødder", "Melon", "Ceasardressing",
+            "Salatmix", "Grana flager (parmesanflager)", "Plukket Kylling", "Sommersalat", "Grøn Tomatsalat", "Salat ala caesar", "Hjemmerørt chili mayo",
+            "Ristede og saltede majs", "Remoulade og ketchup", "Spidskål", "Rugbrødschips", "Grøn Pesto", "Grissini", "Tranebær", "Rosiner", "Hot chili peanuts",
+            "Peanuts", "Tzatziki", "Krydderurtedressing", "Creme fraiche dressing", "Thousand Island dressing", "Kalamata oliven", "Peppadew",
+            "Syltede grønne tomater", "Hvidløg i krydderolie", "Syltede rødløg", "Agurker", "Majs", "Ærter", "Ananas", "Peberfrugtmix", "Mix tomater",
+            "Gulerod i strimler", "Pasta", "Rodfrugtchips", "Rødløg", "Crispmix", "Coleslaw", "Franske kartofler", "Balsamico eddike", "Salatost"
+        ];
+        
+        const starters = [
+            "Sprød samosa", "Karrysuppe", "Kyllingespyd", "Frikadeller", "Flammens hjemmelavede kartoffelsalat", "Sesambagt laks"
+        ];
+        
+        const sauce = [
+            "Vildtsovs", "Whiskysovs", "Bearnaisesovs", "Flammen pebersovs (Oppe i kød sektionen)"
+        ];
+
 
         function showTab(tabId) {
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
         }
         
-        function generateRoulette() {
-            let chosenItem = items[Math.floor(Math.random() * items.length)];
+        function generateRoulette(list, resultId) {
+            let chosenItem = list[Math.floor(Math.random() * list.length)];
             const time = new Date().toLocaleTimeString();
-            document.getElementById('rouletteResult').innerHTML = `Result: <b>${chosenItem}</b><br>Successful! at time: ${time}`;
+            document.getElementById(resultId).innerHTML = `Result: <b>${chosenItem}</b><br>Successful! at time: ${time}`;
         }
 
         function generateScoresheet() {
             let container = document.getElementById('scoresheetTables');
-            container.innerHTML = ''; // Clear previous tables
-
-            items.forEach(item => {
+            container.innerHTML = '';
+            
+            meatItems.forEach(item => {
                 let table = document.createElement('table');
-                let headerRow = `<tr><th colspan='5'>${item}</th></tr>
+                let headerRow = `<tr><th colspan='6'>${item}</th></tr>
                                  <tr><th></th><th>Name</th><th>Taste (1-10)</th><th>Looks (1-10)</th><th>Dry/Juicy (1-10)</th><th>Average</th></tr>`;
                 table.innerHTML = headerRow;
                 
@@ -134,7 +174,7 @@
             }
         }
         
-        generateScoresheet(); // Ensure scoresheet is always available
+        generateScoresheet(); 
     </script>
 </body>
 </html>
